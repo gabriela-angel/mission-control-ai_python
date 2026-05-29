@@ -148,9 +148,12 @@ def final_report():
     total_col_pts = [] # para descobrir que area teve mais pontos
     for i in range(len(risk_points[0])):
         total_col_pts.append(sum(row[i] for row in risk_points))
+
     total_row_pts = [] # para descobrir que ciclo teve mais pontos
     for i in range(len(risk_points)):
         total_row_pts.append(sum(col for col in risk_points[i]))
+
+    total_risk_mean = sum(total_row_pts)/len(total_row_pts)
 
     print(f"""============================================================
 RELATÓRIO FINAL DA MISSÃO
@@ -168,7 +171,7 @@ Média de estabilidade: {sum(row[STABILITY_COL] for row in dados_missao) / len(d
 
 Ciclo mais crítico: Ciclo {total_row_pts.index(max(total_row_pts)) + 1}
 Maior pontuação de risco: {max(total_row_pts)}
-Risco médio da missão: {sum(total_row_pts)/len(total_row_pts):.2f}
+Risco médio da missão: {total_risk_mean:.2f}
 Quantidade de ciclos críticos: {len([i for i in total_row_pts if i > 5])}
 
 Tendência da missão:
@@ -185,12 +188,7 @@ Estabilidade operacional: {total_col_pts[STABILITY_COL]} pontos
 {areas_monitoradas[total_col_pts.index(max(total_col_pts))]}
 
 Classificação final da missão:
-MISSÃO EM ATENÇÃO
-
-Conclusão:
-A missão apresentou instabilidade relevante durante a operação. Apesar
-da tentativa de recuperação no último ciclo, ainda existem sistemas em
-atenção e a equipe deve manter o plano de contingência ativo.
+MISSÃO {"ESTÁVEL" if total_risk_mean <= 2 else ("EM ATENÇÃO" if total_risk_mean <= 5 else "CRÍTICA")}
 """)
 
 def mission_report():
